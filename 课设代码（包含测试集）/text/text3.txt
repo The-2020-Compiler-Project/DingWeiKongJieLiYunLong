@@ -1,0 +1,13 @@
+int abb(int s,int p)
+{
+int m =7;
+s =p*s-m;
+return s;
+}
+void main()
+{
+int a = 5;
+int b = 6;
+int c;
+c = abb(a,b);
+}

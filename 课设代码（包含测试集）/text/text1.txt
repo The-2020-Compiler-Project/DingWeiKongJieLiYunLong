@@ -1,0 +1,14 @@
+void main()
+{
+  int a,b;
+   a=3;
+  int r=7;
+  int R=5;
+   if(a>0)
+{
+    b=5;
+    a=2*3*(R+r);
+    b=2*3*(R+r) / (R-r);
+}
+
+}

@@ -3,11 +3,16 @@
 using namespace std;
 
 typedef enum Category{
-	INT,CHAR,STRING 
+	DOUBLE,INT,CHAR,STRING 
 }Category;
 //typedef enum Style{
 //i, c, p, s, C, k // 标识符，常数，界符，字符串常量，字符常量，关键字
 //}style;
+typedef struct func{
+	string funcname;
+	string para1;
+	string para2;
+}func;
 class Const{
 	public:
 		Const():ch('\0'),num(0),str(""){}
@@ -21,7 +26,6 @@ class Const{
 class  ArrayTable{
 	public:
 		ArrayTable(int,Category);
-		ArrayTable(ArrayTable*);
 		
 		int up;
 		Category cc;
@@ -63,7 +67,7 @@ TypeTable::~TypeTable()
 
 class SymbolTable{ // 符号表 
 	public:
-		SymbolTable(string,stytle,int);
+		SymbolTable(string,stytle,double);
 		SymbolTable(string,stytle,char);
 		SymbolTable(string,stytle,string);
 		SymbolTable(string,stytle,Category,int);
@@ -75,15 +79,15 @@ class SymbolTable{ // 符号表
 		Const* ptr1; // 指向常量表 
 		//PfTabel* ptr2; // 指向函数表
 		//int* ptr3; // 指向长度表 
-		int data1;
+		double data1;
 		char data2;
 		string data3;
-		int* arr1;
+		double* arr1;
 		char* arr2;
 		string* arr3;
 		SymbolTable* next;
 };
-SymbolTable::SymbolTable(string t1,stytle t2,int t3)
+SymbolTable::SymbolTable(string t1,stytle t2,double t3)
 	:id(t1),cc(t2),data1(0),data2('\0'),data3(""),arr1(NULL),arr2(NULL),arr3(NULL)
 {
 	if(t2 == c)
@@ -92,19 +96,19 @@ SymbolTable::SymbolTable(string t1,stytle t2,int t3)
 		ptr1->ch = '\0';
 		ptr1->str = "";
 		ptr1->num = t3;
-		tp = new TypeTable(INT);
+		tp = new TypeTable(DOUBLE);
 		next = NULL;
 	}
 	else if(t2 == i)
 	{
 		ptr1 == NULL;
 		data1 = t3;
-		tp = new TypeTable(INT);
+		tp = new TypeTable(DOUBLE);
 		next = NULL;
 	}
 	else
 	{
-		throw("ERROR INOUT WITH INT");
+		throw("ERROR INOUT WITH DOUBLE");
 	}
 }
 SymbolTable::SymbolTable(string t1,stytle t2,char t3)
@@ -160,10 +164,10 @@ SymbolTable::SymbolTable(string t1,stytle t2,Category t3,int t4 = 0)
 {
 	if(t4 <= 0)
 	{
-		if(t3 == INT)
+		if(t3 == DOUBLE)
 		{
 			ptr1 = NULL;
-			tp = new TypeTable(INT);
+			tp = new TypeTable(DOUBLE);
 			next = NULL;
 		}
 		else if(t3 == CHAR)
@@ -185,12 +189,12 @@ SymbolTable::SymbolTable(string t1,stytle t2,Category t3,int t4 = 0)
 	}
 	else
 	{
-		if(t3 == INT)
+		if(t3 == DOUBLE)
 		{
 			ptr1 = NULL;
-			tp = new TypeTable(INT,t4);
-			arr1 = new int[t4];
-			memset(arr1,0,t4*sizeof(int));
+			tp = new TypeTable(DOUBLE,t4);
+			arr1 = new double[t4];
+			memset(arr1,0,t4*sizeof(double));
 			next = NULL;
 		}
 		else if(t3 == CHAR)
@@ -229,35 +233,74 @@ class Table{
 	public:
 		Table();
 		void Add_Entry(string,stytle,string); // 暂定void 
-		void Add_Entry(string,stytle,int);
+		void Add_Entry(string,stytle,double);
 		void Add_Entry(string,stytle,char);
 		void Add_Entry(string,stytle,Category,int);
+		void Add_Func(func);
 		//数组 
 		bool Is_Entry(string); 
 		bool Is_Array(string);
 		
 		Category Get_Category(string);
 		stytle Get_stytle(string);
+		bool isFunction(string);
 		 
-		int Get_Value_Int(string);
+		double Get_Value_Double(string);
 		char Get_Value_Char(string);
 		string Get_Value_String(string);
-		int Get_Array_Value_Int(string,int);
+		double Get_Array_Value_Double(string,int);
 		char Get_Array_Value_Char(string,int);
 		string Get_Array_Value_String(string,int);
+		string Get_Para1(string);
+		string Get_Para2(string);
 		
-		bool Set_Value(string,int);
+		bool Set_Value(string,double);
 		bool Set_Value(string,char);
 		bool Set_Value(string,string);
-		bool Set_Array_Value(string,int,int);
+		bool Set_Array_Value(string,int,double);
 		bool Set_Array_Value(string,int,char);
 		bool Set_Array_Value(string,int,string);
 		
+		vector<func> function;
 		SymbolTable* st;
 };
 Table::Table()
 {
 	st = NULL; 
+}
+void Table::Add_Func(func t)
+{
+	function.push_back(t);
+}
+bool Table::isFunction(string t)
+{
+	int i;
+	for(i = 0;i < function.size();i++)
+	{
+		if(function[i].funcname == t)
+		return true;
+	}
+	return false;
+}
+string Table::Get_Para1(string t)
+{
+	int i;
+	for(i = 0;i < function.size();i++)
+	{
+		if(function[i].funcname == t)
+		return function[i].para1;
+	}
+	return "";
+}
+string Table::Get_Para2(string t)
+{
+	int i;
+	for(i = 0;i < function.size();i++)
+	{
+		if(function[i].funcname == t)
+		return function[i].para2;
+	}
+	return "";
 }
 Category Table::Get_Category(string t1)
 {
@@ -279,7 +322,7 @@ stytle Table::Get_stytle(string t1)
 			return p->cc;
 		p = p->next; 
 	}
-	throw("UNDIFINED IDENTIFIER");
+	return c;
 }
 void Table::Add_Entry(string t1,stytle t2,string t3)
 {
@@ -294,7 +337,7 @@ void Table::Add_Entry(string t1,stytle t2,string t3)
 		p->next = new SymbolTable(t1,t2,t3);
 	}
 }
-void Table::Add_Entry(string t1,stytle t2,int t3)
+void Table::Add_Entry(string t1,stytle t2,double t3)
 {
 	if(st == NULL)
 	{
@@ -344,7 +387,7 @@ bool Table::Is_Entry(string t1)
 	}
 	return false;
 }
-int Table::Get_Value_Int(string t1)
+double Table::Get_Value_Double(string t1)
 {
 	SymbolTable* p = st;
 	while(p != NULL)
@@ -353,7 +396,7 @@ int Table::Get_Value_Int(string t1)
 		{
 			if(p->cc == i)
 			{
-				if(p->tp->cc == INT)
+				if(p->tp->cc == DOUBLE)
 				return p->data1;
 				else if(p->tp->cc == CHAR)
 				return p->data2;
@@ -433,7 +476,7 @@ bool Table::Is_Array(string t1)
 	}
 	throw("UNDEFINED IDENTIFIER");
 }
-bool Table::Set_Value(string t1,int t2)
+bool Table::Set_Value(string t1,double t2)
 {
 	SymbolTable* p = st;
 	while(p != NULL)
@@ -442,7 +485,7 @@ bool Table::Set_Value(string t1,int t2)
 		{
 			if(p->cc == i)
 			{
-				if(p->tp->cc == INT)
+				if(p->tp->cc == DOUBLE)
 				{
 					p->data1 = t2;
 					return true;
@@ -451,7 +494,8 @@ bool Table::Set_Value(string t1,int t2)
 				throw("INPROPER IDENTIFIER TYPE");
 			}
 			else
-			throw("IMPROPER TYPE");
+			throw(p->tp->cc);
+			//throw("IMPROPER TYPE");
 		}
 		p = p->next; 
 	}
@@ -505,7 +549,7 @@ bool Table::Set_Value(string t1,string t2)
 	}
 	throw("UNDEFINED IDENTIFIER");
 }
-int Table::Get_Array_Value_Int(string t1,int t2)
+double Table::Get_Array_Value_Double(string t1,int t2)
 {
 	SymbolTable* p = st;
 	while(p != NULL)
@@ -514,7 +558,7 @@ int Table::Get_Array_Value_Int(string t1,int t2)
 		{
 			if(p->cc == i)
 			{
-				if(p->tp->cc == INT)
+				if(p->tp->cc == DOUBLE)
 				{
 					if(p->tp->tp != NULL)
 					{
@@ -604,7 +648,7 @@ string Table::Get_Array_Value_String(string t1,int t2)
 	}
 	throw("UNDEFINED IDENTIFIER");
 }
-bool Table::Set_Array_Value(string t1,int t2,int t3)
+bool Table::Set_Array_Value(string t1,int t2,double t3)
 {
 	SymbolTable* p = st;
 	while(p != NULL)
@@ -613,7 +657,7 @@ bool Table::Set_Array_Value(string t1,int t2,int t3)
 		{
 			if(p->cc == i)
 			{
-				if(p->tp->cc == INT)
+				if(p->tp->cc == DOUBLE)
 				{
 					if(p->tp->tp != NULL)
 					{

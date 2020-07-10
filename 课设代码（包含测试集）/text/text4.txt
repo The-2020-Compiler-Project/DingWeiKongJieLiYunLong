@@ -1,0 +1,25 @@
+int fun(int s,int p)
+{
+int m =7;
+s =p*s-m;
+return s;
+}
+void main()
+{
+int a = 5;
+int b = 6;
+int c;
+if(b > a)
+{
+a = a + 1;
+while(b < a)
+{
+a = a - 1;
+}
+c = fun(a,b);
+}
+else
+{
+c = b;
+}
+}

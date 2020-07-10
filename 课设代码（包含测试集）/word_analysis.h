@@ -76,7 +76,7 @@ void word::snapNote()                    //用有限状态自动机去掉注释
 				{
 					state = 5;
 					flag = 1;                //准备跳出
-					//cur--;
+					cur--;
 				}
 				break;
 			case 3:
@@ -164,7 +164,7 @@ void word::isChar()
 	if (txt[++cur] != '\'')
 	{
 		cout << "单词有问题";
-		exit(0);
+		//exit(0);
 	}
 }
 void word::isString()
@@ -179,7 +179,7 @@ void word::isString()
 	if (txt[cur] != '"')
 	{
 		cout << "字符串有问题";
-		exit(0);
+		//exit(0);
 	}
 	else
 		toToken(4);
@@ -232,7 +232,7 @@ double word::number()
 				else
 				{
 					cout << "数字拼写错误";
-					exit(0);
+					//exit(0);
 				}
 				break;
 			case 4:
@@ -277,7 +277,7 @@ double word::number()
 				else
 				{
 					cout << "数字拼写错误";
-					exit(0);
+					//exit(0);
 				}
 				break;
 			case 7:
@@ -296,7 +296,7 @@ double word::number()
 				break;
 			default:
 				cout << "ERROR";
-				exit(0);
+				//exit(0);
 			}
 		}
 	}
@@ -307,7 +307,7 @@ Token word::scaner()                        //词法扫描机，形成token
 	int state;                            //判断生成的类码类型
 	this->value.clear();
 	if (cur == txt.size())
-		exit(0);
+		;//exit(0);
 	else
 	{
 		snapNote();                        //过滤注释
@@ -355,7 +355,6 @@ Token word::scaner()                        //词法扫描机，形成token
 				else
 				{
 					toToken(state);
-					cur++;
 				}
 				break;
 			case '+':
@@ -375,7 +374,6 @@ Token word::scaner()                        //词法扫描机，形成token
 				else
 				{
 					toToken(state);
-					cur++;
 				}
 				break;
 			case '-':
@@ -395,7 +393,6 @@ Token word::scaner()                        //词法扫描机，形成token
 				else
 				{
 					toToken(state);
-					cur++;
 				}
 				break;
 			case '*':
@@ -413,7 +410,6 @@ Token word::scaner()                        //词法扫描机，形成token
 				else
 				{
 					toToken(state);
-					cur++;
 				}
 				break;
 			case ';':
@@ -439,7 +435,7 @@ Token word::scaner()                        //词法扫描机，形成token
 				break;
 			default:
 				cout << "符号有问题";
-				exit(0);
+				//exit(0);
 			}
 			return toke;
 		}

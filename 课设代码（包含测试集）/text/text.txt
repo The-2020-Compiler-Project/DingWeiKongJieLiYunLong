@@ -1,0 +1,17 @@
+int acc(int m,int n)
+{
+m = n -1;
+return m;
+}
+int abb(int s,int p)
+{
+s =acc(s,p);
+return s;
+}
+void main()
+{
+int a = 5;
+int b = 6;
+int c;
+c = abb(a,b);
+}
